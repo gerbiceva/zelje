@@ -26,7 +26,7 @@ export function FolkZelje() {
     setLoading(true)
     supabaseClient.from('zelje').insert({zelja})
       .then(()=>{notifications.show({message: 'Bravo zdej vemo kaj hoces', icon: <Icon3dCubeSphere/>})})
-      .finally(()=>{setLoading(false)})
+      .finally(()=>{setLoading(false); form.reset()})
   }
 
   return (
