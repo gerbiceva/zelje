@@ -22,21 +22,22 @@ export function FolkZelje() {
     },
   });
 
-  const sendZelje = ({zelja}: { zelja: string; }) => {
+  const sendZelje = ({ zelja }: { zelja: string; }) => {
     setLoading(true)
-    supabaseClient.from('zelje').insert({zelja})
-      .then(()=>{notifications.show({message: 'Bravo zdej vemo kaj hoces', icon: <Icon3dCubeSphere/>})})
-      .finally(()=>{setLoading(false); form.reset()})
+    supabaseClient.from('zelje').insert({ zelja })
+      .then(() => { notifications.show({ message: 'Bravo zdej vemo kaj hoces', icon: <Icon3dCubeSphere /> }) })
+      .finally(() => { setLoading(false); form.reset() })
   }
 
   return (
     <Stack p="lg" pos="relative">
-      <Title>ojla</Title>
+      <Title>Gerba žmurka</Title>
+      <Title order={3}>Kaj hočeš čut</Title>
       <Group>
         <form onSubmit={form.onSubmit(sendZelje)}>
-          <TextInput placeholder="zelje" {...form.getInputProps('zelja')}/>
-      
-           <Group justify="center" mt="md">
+          <TextInput placeholder="zelje" label="ime komada za žmurkat" {...form.getInputProps('zelja')} />
+
+          <Group justify="center" mt="md">
             <Button type="submit">Submit</Button>
           </Group>
         </form>
