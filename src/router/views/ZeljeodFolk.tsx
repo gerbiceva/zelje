@@ -1,71 +1,63 @@
-import { ActionIcon, Stack, Table, Title } from "@mantine/core";
-import { IconTrashX } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import {
+  ActionIcon,
+  Alert,
+  LoadingOverlay,
+  Stack,
+  Table,
+  Title,
+} from "@mantine/core";
+import { IconAlertCircle, IconTrashX } from "@tabler/icons-react";
 import { supabaseClient } from "../../supabase/supabase";
+import { useLiveSongList } from "../../components/hooks.ts/liveSongsList";
 
 export function ZeljeodFolk() {
-  const [zelje, setZelje] = useState([])
+  const { err, isLoading, zelje, removeZelje } = useLiveSongList();
 
-  const channel = supabaseClient
-    .channel('schema-db-changes')
-    .on(
-      'postgres_changes',
-      {
-        event: "INSERT",
-        schema: "public"
-      }, (payload) => setZelje([payload.new, ...zelje])
-    )
-    .on(
-      'postgres_changes',
-      {
-        event: 'DELETE',
-        schema: 'public',
-      },
-      (payload) => {
-        setZelje(zelje.filter((zelja) => zelja.id != payload.old.id));
-      }
-    )
-    .subscribe()
-
-  useEffect(() => {
+  const deleteZelja = (id: number) => {
+    console.log(id);
     supabaseClient
-      .from('zelje')
-      .select()
-      .then((data) => { setZelje(data.data) })
-  }, [])
-
-  const deleteZelja = (id) => {
-    console.log(id)
-    const { error } = supabaseClient
-      .from('zelje')
+      .from("zelje")
       .delete()
-      .eq('id', id)
-      .then(()=>setZelje(zelje.filter((zelja) => zelja.id != id)));
-    ;
-  }
+      .eq("id", id)
+      .then(() => {
+        removeZelje(id);
+      });
+  };
 
-  const zeelje = zelje.map(zelja =>
-  (<Table.Tr key={zelja.id}>
-    <Table.Td>{zelja.zelja}</Table.Td>
-    <Table.Td>
-      <ActionIcon variant="subtle" onClick={() => deleteZelja(zelja.id)}><IconTrashX /></ActionIcon>
-    </Table.Td>
-  </Table.Tr>)
-  );
-
+  const zeelje = zelje
+    .sort((a, b) => b.clicks - a.clicks)
+    .map((zelja) => (
+      <Table.Tr key={zelja.id}>
+        <Table.Td>{zelja.zelja}</Table.Td>
+        <Table.Td>{zelja.clicks}</Table.Td>
+        <Table.Td>
+          <ActionIcon variant="subtle" onClick={() => deleteZelja(zelja.id)}>
+            <IconTrashX />
+          </ActionIcon>
+        </Table.Td>
+      </Table.Tr>
+    ));
 
   return (
     <Stack p="lg" pos="relative">
       <Title>Pa valda nebomo to poslusali?</Title>
-      <Table>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Komad</Table.Th>
-            <Table.Th>Zbriz</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{zeelje}</Table.Tbody>
-      </Table>
+      {err != undefined ? (
+        <Alert color="red" icon={<IconAlertCircle></IconAlertCircle>}>
+          {err.message}
+        </Alert>
+      ) : (
+        <Table>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Komad</Table.Th>
+              <Table.Th>Count</Table.Th>
+              <Table.Th>Zbriz</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{zeelje}</Table.Tbody>
+        </Table>
+      )}
+      <LoadingOverlay visible={isLoading} />
     </Stack>
   );
 }
