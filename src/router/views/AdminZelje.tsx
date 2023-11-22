@@ -11,6 +11,7 @@ import { supabaseClient } from "../../supabase/supabase";
 import { useLiveSongList } from "../../components/hooks.ts/songListHook";
 import { score } from "../../components/heuristic";
 import useTimeInSeconds from "../../components/hooks.ts/useTimer";
+import { useMemo } from "react";
 
 export function ZeljeodFolk() {
   const { err, isLoading, zelje, removeZelje } = useLiveSongList();
@@ -27,37 +28,40 @@ export function ZeljeodFolk() {
   };
 
   const timeSec = useTimeInSeconds();
-
-  const zeelje = zelje
-    .sort(
+  const sortedZelje = useMemo(() => {
+    return zelje.sort(
       (a, b) =>
         score(b.updated_at, b.clicks, timeSec) -
         score(a.updated_at, a.clicks, timeSec)
-    )
-    .map((zelja) => (
-      <Table.Tr key={zelja.id}>
-        <Table.Td>
-          {zelja.zelja?.includes("http") ? (
-            <>
-              <a href={zelja.zelja.split(" ")[0]} target="_blank">
-                {zelja.zelja.split(" ")[0]}
-              </a>{" "}
-              {zelja.zelja.split(" ").slice(1).join(" ")}
-            </>
-          ) : (
-            <>{zelja.zelja}</>
-          )}
-        </Table.Td>
-        <Table.Td>{zelja.clicks}</Table.Td>
-        <Table.Td>{score(zelja.updated_at, zelja.clicks, timeSec)}</Table.Td>
-        <Table.Td>{new Date(zelja.updated_at).toLocaleTimeString()}</Table.Td>
-        <Table.Td>
-          <ActionIcon variant="subtle" onClick={() => deleteZelja(zelja.id)}>
-            <IconTrashX />
-          </ActionIcon>
-        </Table.Td>
-      </Table.Tr>
-    ));
+    );
+  }, [zelje, timeSec]);
+
+  const zeelje = sortedZelje.map((zelja) => (
+    <Table.Tr key={zelja.id}>
+      <Table.Td>
+        {zelja.zelja?.includes("http") ? (
+          <>
+            <a href={zelja.zelja.split(" ")[0]} target="_blank">
+              {zelja.zelja.split(" ")[0]}
+            </a>{" "}
+            {zelja.zelja.split(" ").slice(1).join(" ")}
+          </>
+        ) : (
+          <>{zelja.zelja}</>
+        )}
+      </Table.Td>
+      <Table.Td>{zelja.clicks}</Table.Td>
+      <Table.Td>
+        {Math.round(score(zelja.updated_at, zelja.clicks, timeSec) * 100) / 100}
+      </Table.Td>
+      <Table.Td>{new Date(zelja.updated_at).toLocaleTimeString()}</Table.Td>
+      <Table.Td>
+        <ActionIcon variant="subtle" onClick={() => deleteZelja(zelja.id)}>
+          <IconTrashX />
+        </ActionIcon>
+      </Table.Td>
+    </Table.Tr>
+  ));
 
   return (
     <Stack p="lg" pos="relative">

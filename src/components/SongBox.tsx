@@ -11,10 +11,15 @@ export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
 
   return (
     <Paper
+      withBorder
       shadow="lg"
       radius="md"
       p="md"
-      style={shakeStyle}
+      style={{
+        ...shakeStyle,
+        borderWidth: "2px",
+        borderColor: `hsl(${(zelja.id * 131) % 360}, 80%, 80%)`,
+      }}
       onClick={() => {
         console.log("klik");
         shakeElement();
@@ -46,7 +51,7 @@ export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
             )}
           </Text>
           <Text size="xs" c="dimmed" py="sm">
-            {new Date(zelja.created_at).toLocaleTimeString()}
+            {new Date(zelja.updated_at).toLocaleTimeString()}
           </Text>
         </Flex>
         <Stack align="center">

@@ -53,7 +53,7 @@ export function FolkZelje() {
             icon: <Icon3dCubeSphere />,
           });
           // form.reset
-          window.location.replace("/");
+          window.location.reload();
         } else {
           notifications.show({
             color: "red",
@@ -119,7 +119,6 @@ export function FolkZelje() {
       </Blockquote>
       <SimpleGrid cols={1} py="xl" pos="relative">
         <LoadingOverlay visible={isLoading} />
-        {timeSec}
 
         {sortedZelje.map((zelja) => {
           return <SongBox zelja={zelja} key={zelja.id} />;
