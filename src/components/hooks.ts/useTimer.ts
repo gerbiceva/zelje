@@ -7,7 +7,7 @@ export const useTimeInSeconds = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTimeInSeconds(new Date().getTime() / 1000);
+      setTimeInSeconds(Math.round(new Date().getTime() / 1000));
     }, 1000);
 
     return () => clearInterval(intervalId);

@@ -19,7 +19,7 @@ import {
   IconConfetti,
   IconSparkles,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SongBox } from "../../components/SongBox";
 import { useLiveSongList } from "../../components/hooks.ts/songListHook";
 import { supabaseClient } from "../../supabase/supabase";
@@ -57,13 +57,21 @@ export function FolkZelje() {
         } else {
           notifications.show({
             color: "red",
-            message: "AAA DEBIL PEJDI NA WIFI NEKAJ NEDELA",
+            message: response.error.message,
             icon: <IconAlertCircle />,
           });
         }
         setLoading(false);
       });
   };
+
+  const sortedZelje = useMemo(() => {
+    return zelje.sort(
+      (a, b) =>
+        score(b.updated_at, b.clicks, timeSec) -
+        score(a.updated_at, a.clicks, timeSec)
+    );
+  }, [zelje, timeSec]);
 
   return (
     <Container size="sm">
@@ -111,16 +119,11 @@ export function FolkZelje() {
       </Blockquote>
       <SimpleGrid cols={1} py="xl" pos="relative">
         <LoadingOverlay visible={isLoading} />
+        {timeSec}
 
-        {zelje
-          .sort(
-            (a, b) =>
-              score(b.updated_at, b.clicks, timeSec) -
-              score(a.updated_at, a.clicks, timeSec)
-          )
-          .map((zelja) => {
-            return <SongBox zelja={zelja} key={zelja.id} />;
-          })}
+        {sortedZelje.map((zelja) => {
+          return <SongBox zelja={zelja} key={zelja.id} />;
+        })}
       </SimpleGrid>
     </Container>
   );

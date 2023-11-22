@@ -1,10 +1,14 @@
-import { Flex, Paper, Text, Tooltip } from "@mantine/core";
+import { Flex, Paper, Stack, Text } from "@mantine/core";
 import { Tables, supabaseClient } from "../supabase/supabase";
+import { score } from "./heuristic";
 import useShakeAnimation from "./hooks.ts/useShake";
+import useTimeInSeconds from "./hooks.ts/useTimer";
 import "./shake.css";
 
 export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
   const { shakeElement, shakeStyle } = useShakeAnimation();
+  const timeSec = useTimeInSeconds();
+
   return (
     <Paper
       shadow="lg"
@@ -45,11 +49,14 @@ export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
             {new Date(zelja.created_at).toLocaleTimeString()}
           </Text>
         </Flex>
-        <Tooltip label={"Stevilo klikov"}>
+        <Stack align="center">
           <Text size="xl" fw="bolder" variant="gradient" px="xl">
             {zelja.clicks}
           </Text>
-        </Tooltip>
+          <Text size="xs" opacity={0.1}>
+            {Math.round(score(zelja.updated_at, zelja.clicks, timeSec))}
+          </Text>
+        </Stack>
       </Flex>
     </Paper>
   );
