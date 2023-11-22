@@ -1,14 +1,10 @@
 import { Flex, Paper, Stack, Text } from "@mantine/core";
 import { Tables, supabaseClient } from "../supabase/supabase";
-import { score } from "./heuristic";
 import useShakeAnimation from "./hooks.ts/useShake";
-import useTimeInSeconds from "./hooks.ts/useTimer";
 import "./shake.css";
 
 export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
   const { shakeElement, shakeStyle } = useShakeAnimation();
-
-  const timeSec = useTimeInSeconds();
 
   return (
     <Paper
