@@ -52,15 +52,12 @@ export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
             )}
           </Text>
           <Text size="xs" c="dimmed" py="sm">
-            {new Date(zelja.updated_at).toLocaleTimeString()}
+            {new Date(zelja.created_at).toLocaleTimeString()}
           </Text>
         </Flex>
         <Stack align="center">
           <Text size="xl" fw="bolder" variant="gradient" px="xl">
             {zelja.clicks}
-          </Text>
-          <Text size="xs" opacity={0.1}>
-            {Math.round(score(zelja.updated_at, zelja.clicks, timeSec))}
           </Text>
         </Stack>
       </Flex>

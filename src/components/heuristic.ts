@@ -1,5 +1,6 @@
 export function heuristic(elapsedTimeSec: number, clicks: number) {
   return clicks;
+  // return clicks - Math.min(30, elapsedTimeSec / 2);
 }
 
 export function score(time: string, clicks: number, nowSec: number) {
