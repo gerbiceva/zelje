@@ -8,7 +8,6 @@ import {
   LoadingOverlay,
   SimpleGrid,
   Stack,
-  Text,
   TextInput,
   Title,
 } from "@mantine/core";
@@ -18,7 +17,6 @@ import {
   Icon3dCubeSphere,
   IconAlertCircle,
   IconConfetti,
-  IconSalad,
   IconSparkles,
 } from "@tabler/icons-react";
 import { useState } from "react";
