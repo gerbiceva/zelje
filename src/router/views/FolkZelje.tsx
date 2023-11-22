@@ -1,4 +1,5 @@
 import {
+  Blockquote,
   Button,
   Center,
   Container,
@@ -16,6 +17,8 @@ import { notifications } from "@mantine/notifications";
 import {
   Icon3dCubeSphere,
   IconAlertCircle,
+  IconConfetti,
+  IconSalad,
   IconSparkles,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -64,9 +67,9 @@ export function FolkZelje() {
     <Container size="sm">
       <Center>
         <Stack p="lg" pos="relative" w="100%">
-          <Title>🥬 Gerba žmurka 🥬</Title>
-          <Title order={3} c="dimmed">
-            Kaj hočeš čut
+          <Title> Gerba žmurka</Title>
+          <Title order={4} c="dimmed">
+            Kaj hočeš čut? Dodaj svoje zelje 🥬
           </Title>
           <Group justify="center" w="100%">
             <form
@@ -76,7 +79,7 @@ export function FolkZelje() {
               }}
             >
               <TextInput
-                placeholder="zelje"
+                placeholder="tvoja zelja"
                 label="ime komada za žmurkat"
                 {...form.getInputProps("zelja")}
               />
@@ -100,10 +103,9 @@ export function FolkZelje() {
         </Stack>
       </Center>
       <Divider label="Volitve za komade" py="lg" />
-      🤩
-      <Text variant="gradient" size="lg" fw="bold">
+      <Blockquote variant="gradient" icon={<IconConfetti />} m="md">
         Spam klikaj komad ka ti je dober, da bo DJ vidu ker je najbolj boljši.
-      </Text>
+      </Blockquote>
       <SimpleGrid cols={1} py="xl">
         {zelje
           .sort((a, b) => b.clicks - a.clicks)
