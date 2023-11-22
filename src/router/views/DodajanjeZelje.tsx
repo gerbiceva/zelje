@@ -16,6 +16,7 @@ import { notifications } from "@mantine/notifications";
 import {
   Icon3dCubeSphere,
   IconAlertCircle,
+  IconBrandSpotify,
   IconConfetti,
   IconSparkles,
 } from "@tabler/icons-react";
@@ -81,6 +82,12 @@ export function FolkZelje() {
           <Title order={4} c="dimmed">
             Kaj hočeš čut? Dodaj svoje zelje 🥬
           </Title>
+          <Group>
+            <IconBrandSpotify color="#1DB954"></IconBrandSpotify>
+            <Title order={6} c="green">
+              DJu je ful doro če bi lahko poslali spotify link. tnx
+            </Title>
+          </Group>
           <Group justify="center" w="100%">
             <form
               onSubmit={form.onSubmit(sendZelje)}

@@ -7,6 +7,7 @@ import "./shake.css";
 
 export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
   const { shakeElement, shakeStyle } = useShakeAnimation();
+
   const timeSec = useTimeInSeconds();
 
   return (

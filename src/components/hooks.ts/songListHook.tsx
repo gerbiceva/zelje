@@ -2,10 +2,16 @@ import { useState, useEffect } from "react";
 import { Tables, supabaseClient } from "../../supabase/supabase";
 import { PostgrestError } from "@supabase/supabase-js";
 
+let zeljeBuffer: Tables<"zelje">[] = [];
 export const useLiveSongList = () => {
   const [zelje, setZelje] = useState<Tables<"zelje">[]>([]);
   const [err, setErr] = useState<Error | PostgrestError>();
   const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    console.log(zeljeBuffer);
+    zeljeBuffer = [...zelje];
+  }, [zelje]);
 
   const removeZelje = (id: number) => {
     setZelje(zelje.filter((zelja) => zelja.id != id));
@@ -27,13 +33,12 @@ export const useLiveSongList = () => {
             return;
           }
           // find old index
-          console.log("UPDATE", payload.new, payload.old);
-          for (let i = 0; i < zelje.length; i++) {
-            if (zelje[i].id == payload.old.id) {
-              zelje[i].clicks = payload.new.clicks;
+          for (let i = 0; i < zeljeBuffer.length; i++) {
+            if (zeljeBuffer[i].id == payload.old.id) {
+              zeljeBuffer[i].clicks = payload.new.clicks;
             }
           }
-          setZelje([...zelje]);
+          setZelje([...zeljeBuffer]);
         }
       )
       .on<Tables<"zelje">>(
@@ -47,12 +52,12 @@ export const useLiveSongList = () => {
 
           if (payload.errors) {
             setErr(new Error(payload.errors[0]));
-            setZelje([]);
+            // zeljeBuffer = [];
             return;
           }
 
           if (payload.new) {
-            setZelje([payload.new, ...zelje]);
+            setZelje([payload.new, ...zeljeBuffer]);
           }
         }
       )
@@ -68,13 +73,13 @@ export const useLiveSongList = () => {
             setZelje([]);
             return;
           }
-          setZelje(zelje.filter((zelja) => zelja.id != payload.old.id));
+          setZelje(zeljeBuffer.filter((zelja) => zelja.id != payload.old.id));
         }
       )
       .subscribe((state) => {
         console.log(state);
       });
-  }, [zelje]);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -87,6 +92,7 @@ export const useLiveSongList = () => {
         } else {
           if (resp.data) {
             setZelje(resp.data);
+            zeljeBuffer = resp.data;
           }
         }
         setLoading(false);
