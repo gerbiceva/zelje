@@ -23,6 +23,8 @@ import { useState } from "react";
 import { SongBox } from "../../components/SongBox";
 import { useLiveSongList } from "../../components/hooks.ts/songListHook";
 import { supabaseClient } from "../../supabase/supabase";
+import { score } from "../../components/heuristic";
+import useTimeInSeconds from "../../components/hooks.ts/useTimer";
 
 export function FolkZelje() {
   const [loading, setLoading] = useState(false);
@@ -37,6 +39,7 @@ export function FolkZelje() {
   });
 
   const { isLoading, zelje } = useLiveSongList();
+  const timeSec = useTimeInSeconds();
 
   const sendZelje = ({ zelja }: { zelja: string }) => {
     setLoading(true);
@@ -110,7 +113,11 @@ export function FolkZelje() {
         <LoadingOverlay visible={isLoading} />
 
         {zelje
-          .sort((a, b) => b.clicks - a.clicks)
+          .sort(
+            (a, b) =>
+              score(b.updated_at, b.clicks, timeSec) -
+              score(a.updated_at, a.clicks, timeSec)
+          )
           .map((zelja) => {
             return <SongBox zelja={zelja} key={zelja.id} />;
           })}

@@ -13,6 +13,7 @@ export interface Database {
         Row: {
           clicks: number;
           created_at: string;
+          updated_at: string;
           id: number;
           zelja: string | null;
         };

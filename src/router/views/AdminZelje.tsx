@@ -9,6 +9,8 @@ import {
 import { IconAlertCircle, IconTrashX } from "@tabler/icons-react";
 import { supabaseClient } from "../../supabase/supabase";
 import { useLiveSongList } from "../../components/hooks.ts/songListHook";
+import { score } from "../../components/heuristic";
+import useTimeInSeconds from "../../components/hooks.ts/useTimer";
 
 export function ZeljeodFolk() {
   const { err, isLoading, zelje, removeZelje } = useLiveSongList();
@@ -24,8 +26,14 @@ export function ZeljeodFolk() {
       });
   };
 
+  const timeSec = useTimeInSeconds();
+
   const zeelje = zelje
-    .sort((a, b) => b.clicks - a.clicks)
+    .sort(
+      (a, b) =>
+        score(b.updated_at, b.clicks, timeSec) -
+        score(a.updated_at, a.clicks, timeSec)
+    )
     .map((zelja) => (
       <Table.Tr key={zelja.id}>
         <Table.Td>
@@ -41,7 +49,8 @@ export function ZeljeodFolk() {
           )}
         </Table.Td>
         <Table.Td>{zelja.clicks}</Table.Td>
-        <Table.Td>{new Date(zelja.created_at).toLocaleTimeString()}</Table.Td>
+        <Table.Td>{score(zelja.updated_at, zelja.clicks, timeSec)}</Table.Td>
+        <Table.Td>{new Date(zelja.updated_at).toLocaleTimeString()}</Table.Td>
         <Table.Td>
           <ActionIcon variant="subtle" onClick={() => deleteZelja(zelja.id)}>
             <IconTrashX />
@@ -63,7 +72,8 @@ export function ZeljeodFolk() {
             <Table.Tr>
               <Table.Th>Komad</Table.Th>
               <Table.Th>Count</Table.Th>
-              <Table.Th>Time</Table.Th>
+              <Table.Th>Score</Table.Th>
+              <Table.Th>Updated</Table.Th>
               <Table.Th>Zbriz</Table.Th>
             </Table.Tr>
           </Table.Thead>
