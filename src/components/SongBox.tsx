@@ -1,14 +1,19 @@
 import { Flex, Paper, Text, Tooltip } from "@mantine/core";
 import { Tables, supabaseClient } from "../supabase/supabase";
+import useShakeAnimation from "./hooks.ts/useShake";
+import "./shake.css";
 
 export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
+  const { shakeElement, shakeStyle } = useShakeAnimation();
   return (
     <Paper
       shadow="lg"
       radius="md"
       p="md"
+      style={shakeStyle}
       onClick={() => {
         console.log("klik");
+        shakeElement();
 
         supabaseClient
           .from("zelje")
@@ -24,7 +29,18 @@ export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
       {/* <Text>Paper is the most basic ui component</Text> */}
       <Flex align="center">
         <Flex w="100%" direction="column" justify="space-between">
-          <Text lineClamp={3}>{zelja.zelja}</Text>
+          <Text lineClamp={3}>
+            {zelja.zelja?.includes("http") ? (
+              <>
+                <a href={zelja.zelja.split(" ")[0]} target="_blank">
+                  {zelja.zelja.split(" ")[0]}
+                </a>{" "}
+                {zelja.zelja.split(" ").slice(1).join(" ")}
+              </>
+            ) : (
+              <>{zelja.zelja}</>
+            )}
+          </Text>
           <Text size="xs" c="dimmed" py="sm">
             {new Date(zelja.created_at).toLocaleTimeString()}
           </Text>

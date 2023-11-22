@@ -13,23 +13,7 @@ export const useLiveSongList = () => {
 
   supabaseClient
     .channel("schema-db-changes")
-    .on<Tables<"zelje">>(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-      },
-      (payload) => {
-        if (payload.errors) {
-          setErr(new Error(payload.errors[0]));
-          setZelje([]);
-          return;
-        }
-        if (payload.new) {
-          setZelje([payload.new, ...zelje]);
-        }
-      }
-    )
+
     .on<Tables<"zelje">>(
       "postgres_changes",
       {
@@ -50,6 +34,26 @@ export const useLiveSongList = () => {
           }
         }
         setZelje([...zelje]);
+      }
+    )
+    .on<Tables<"zelje">>(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+      },
+      (payload) => {
+        console.log({ payload });
+
+        if (payload.errors) {
+          setErr(new Error(payload.errors[0]));
+          setZelje([]);
+          return;
+        }
+
+        if (payload.new) {
+          setZelje([payload.new, ...zelje]);
+        }
       }
     )
     .on<Tables<"zelje">>(

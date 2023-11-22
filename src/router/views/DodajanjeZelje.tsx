@@ -21,7 +21,7 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { SongBox } from "../../components/SongBox";
-import { useLiveSongList } from "../../components/hooks.ts/liveSongsList";
+import { useLiveSongList } from "../../components/hooks.ts/songListHook";
 import { supabaseClient } from "../../supabase/supabase";
 
 export function FolkZelje() {
@@ -49,7 +49,8 @@ export function FolkZelje() {
             message: "Bravo zdej vemo kaj hoces",
             icon: <Icon3dCubeSphere />,
           });
-          form.reset();
+          // form.reset
+          window.location.replace("/");
         } else {
           notifications.show({
             color: "red",
@@ -77,7 +78,7 @@ export function FolkZelje() {
               }}
             >
               <TextInput
-                placeholder="tvoja zelja"
+                placeholder="{ mogoce url } bolaaan komaad"
                 label="ime komada za žmurkat"
                 {...form.getInputProps("zelja")}
               />
@@ -97,14 +98,17 @@ export function FolkZelje() {
             </form>
           </Group>
 
-          <LoadingOverlay visible={loading || isLoading} />
+          <LoadingOverlay visible={loading} />
         </Stack>
       </Center>
       <Divider label="Volitve za komade" py="lg" />
       <Blockquote variant="gradient" icon={<IconConfetti />} m="md">
         Spam klikaj komad ka ti je dober, da bo DJ vidu ker je najbolj boljši.
+        (ne prou prevec)
       </Blockquote>
-      <SimpleGrid cols={1} py="xl">
+      <SimpleGrid cols={1} py="xl" pos="relative">
+        <LoadingOverlay visible={isLoading} />
+
         {zelje
           .sort((a, b) => b.clicks - a.clicks)
           .map((zelja) => {

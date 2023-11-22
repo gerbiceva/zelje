@@ -1,0 +1,13 @@
+
+@keyframes shakeAnimation {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25%, 75% {
+    transform: translateX(-25px);
+  }
+  50% {
+    transform: translateX(20px);
+
+  }
+}
