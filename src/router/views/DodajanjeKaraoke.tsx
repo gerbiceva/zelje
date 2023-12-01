@@ -16,44 +16,40 @@ import { notifications } from "@mantine/notifications";
 import {
   Icon3dCubeSphere,
   IconAlertCircle,
-  IconBrandSpotify,
-  IconConfetti,
-  IconSparkles,
+  IconMicrophone2,
 } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import { SongBox } from "../../components/SongBox";
-import { useLiveSongList } from "../../components/hooks.ts/songListHook";
 import { supabaseClient } from "../../supabase/supabase";
-import { score } from "../../components/heuristic";
-import useTimeInSeconds from "../../components/hooks.ts/useTimer";
+import { useLiveKaraokeList } from "../../components/hooks.ts/karaokeListHook";
 
-export function FolkZelje() {
+export function FolkKaraoke() {
   const [loading, setLoading] = useState(false);
   const form = useForm({
     initialValues: {
-      zelja: "",
+      imepriimek: "",
+      komad: ""
     },
 
     validate: {
-      zelja: (value) => (value.length > 3 ? null : "Malo prekratko buraz"),
+      imepriimek: (value) => (value.length > 3 ? null : "Malo prekratko buraz"),
+      komad: (value) => (value.length > 3 ? null : "Malo prekratko buraz"),
     },
   });
 
-  const { isLoading, zelje } = useLiveSongList();
-  const timeSec = useTimeInSeconds();
+  const { isLoading, karaoke } = useLiveKaraokeList();
 
-  const sendZelje = ({ zelja }: { zelja: string }) => {
+  const sendPrijava = ({imepriimek, komad}: {imepriimek: string, komad: string}) => {
     setLoading(true);
     supabaseClient
-      .from("zelje")
-      .insert({ zelja })
+      .from("karaoke")
+      .insert({ imepriimek, komad })
       .then((response) => {
         if (!response.error) {
           notifications.show({
-            message: "Bravo zdej vemo kaj hoces",
+            message: "Bravo zdej vemo kaj bos pel",
             icon: <Icon3dCubeSphere />,
           });
-          // form.reset
           window.location.reload();
         } else {
           notifications.show({
@@ -66,13 +62,21 @@ export function FolkZelje() {
       });
   };
 
-  const sortedZelje = useMemo(() => {
-    return zelje.sort(
-      (a, b) =>
-        score(b.updated_at, b.clicks, timeSec) -
-        score(a.updated_at, a.clicks, timeSec)
-    );
-  }, [zelje, timeSec]);
+  const sortedKaraoke = useMemo(() => {
+    return karaoke.filter((kar) => {
+      return !kar.hidden;
+    }).sort((a, b) => {
+      return a.id - b.id;
+    });
+  }, [karaoke]);
+
+  const sortedKaraokeOdpete = useMemo(() => {
+    return karaoke.filter((kar) => {
+      return kar.hidden;
+    }).sort((a, b) => {
+      return a.id - b.id;
+    });
+  }, [karaoke]);
 
   return (
     <Container size="sm">
@@ -80,25 +84,30 @@ export function FolkZelje() {
         <Stack p="lg" pos="relative" w="100%">
           <Title> Gerba žmurka</Title>
           <Title order={4} c="dimmed">
-            Kaj hočeš čut? Dodaj svoje zelje 🥬
+            Kaj hočeš zapet, prijavi se 🎤
           </Title>
-          <Group>
+          {/* <Group>
             <IconBrandSpotify color="#1DB954"></IconBrandSpotify>
             <Title order={6} c="green">
               DJu je ful doro če bi lahko poslali spotify link. tnx
             </Title>
-          </Group>
+          </Group> */}
           <Group justify="center" w="100%">
             <form
-              onSubmit={form.onSubmit(sendZelje)}
+              onSubmit={form.onSubmit(sendPrijava)}
               style={{
                 width: "100%",
               }}
-            >
-              <TextInput
-                placeholder="{ mogoce url } bolaaan komaad"
-                label="ime komada za žmurkat"
-                {...form.getInputProps("zelja")}
+            > 
+              <TextInput 
+                placeholder="ime priimek"
+                label="ime priimek"
+                {...form.getInputProps("imepriimek")}
+              />
+              <TextInput 
+                placeholder="{ mogoce url } naslov komada"
+                label="naslov komada"
+                {...form.getInputProps("komad")}
               />
 
               <Group justify="center" mt="md">
@@ -107,10 +116,10 @@ export function FolkZelje() {
                   disabled={!form.isValid()}
                   fullWidth
                   size="md"
-                  leftSection={<IconSparkles></IconSparkles>}
+                  leftSection={<IconMicrophone2></IconMicrophone2>}
                   variant="gradient"
                 >
-                  Dodaj muzikico
+                  Dodaj prijavo
                 </Button>
               </Group>
             </form>
@@ -119,16 +128,26 @@ export function FolkZelje() {
           <LoadingOverlay visible={loading} />
         </Stack>
       </Center>
-      <Divider label="Volitve za komade" py="lg" />
-      <Blockquote variant="gradient" icon={<IconConfetti />} m="md">
+      <Divider label="Seznam pevcev" py="lg" />
+      {/* <Blockquote variant="gradient" icon={<IconConfetti />} m="md">
         Spam klikaj komad ka ti je dober, da bo DJ vidu ker je najbolj boljši.
         (ne prou prevec)
-      </Blockquote>
+      </Blockquote> */}
       <SimpleGrid cols={1} py="xl" pos="relative">
         <LoadingOverlay visible={isLoading} />
 
-        {sortedZelje.map((zelja) => {
-          return <SongBox zelja={zelja} key={zelja.id} />;
+        {sortedKaraoke.map((kar) => {
+          return <SongBox karaoke={kar} key={kar.id}/>
+        })}
+      </SimpleGrid>
+
+      <Divider label="Seznam odpetih komadov" py="lg" />
+
+      <SimpleGrid cols={1} py="xl" pos="relative">
+        <LoadingOverlay visible={isLoading} />
+
+        {sortedKaraokeOdpete.map((kar) => {
+          return <SongBox karaoke={kar} key={kar.id}/>
         })}
       </SimpleGrid>
     </Container>

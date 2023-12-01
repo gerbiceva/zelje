@@ -1,10 +1,8 @@
 import { Flex, Paper, Stack, Text } from "@mantine/core";
-import { Tables, supabaseClient } from "../supabase/supabase";
-import useShakeAnimation from "./hooks.ts/useShake";
+import { Tables } from "../supabase/supabase";
 import "./shake.css";
 
-export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
-  const { shakeElement, shakeStyle } = useShakeAnimation();
+export const SongBox = ({ karaoke }: { karaoke: Tables<"karaoke"> }) => {
 
   return (
     <Paper
@@ -13,47 +11,33 @@ export const SongBox = ({ zelja }: { zelja: Tables<"zelje"> }) => {
       radius="md"
       p="md"
       style={{
-        ...shakeStyle,
         borderWidth: "2px",
-        borderColor: `hsl(${(zelja.id * 131) % 360}, 80%, 80%)`,
-      }}
-      onClick={() => {
-        console.log("klik");
-        shakeElement();
-
-        supabaseClient
-          .from("zelje")
-          .update({ clicks: zelja.clicks + 1 })
-          .eq("id", zelja.id)
-          .then((res) => {
-            if (res.error) {
-              console.log("err", res.data);
-            }
-          });
+        borderColor: `hsl(${(karaoke.id * 131) % 360}, 80%, 80%)`,
       }}
     >
-      {/* <Text>Paper is the most basic ui component</Text> */}
       <Flex align="center">
         <Flex w="100%" direction="column" justify="space-between">
           <Text lineClamp={3}>
-            {zelja.zelja?.includes("http") ? (
+            {karaoke.komad?.includes("http") ? (
               <>
-                <a href={zelja.zelja.split(" ")[0]} target="_blank">
-                  {zelja.zelja.split(" ")[0]}
+                {karaoke.imepriimek} - 
+                <a href={karaoke.komad.split(" ")[0]} target="_blank">
+                  {karaoke.komad.split(" ")[0]}
                 </a>{" "}
-                {zelja.zelja.split(" ").slice(1).join(" ")}
+                {karaoke.komad.split(" ").slice(1).join(" ")}
               </>
             ) : (
-              <>{zelja.zelja}</>
+              <>{karaoke.imepriimek} - {karaoke.komad}</>
             )}
           </Text>
           <Text size="xs" c="dimmed" py="sm">
-            {new Date(zelja.created_at).toLocaleTimeString()}
+            {new Date(karaoke.created_at).toLocaleString()}
           </Text>
         </Flex>
         <Stack align="center">
-          <Text size="xl" fw="bolder" variant="gradient" px="xl">
-            {zelja.clicks}
+          {/* TODO: pofixaj barvo */}
+          <Text size="xl" fw="bolder" variant="gradient" px="xl" c={`hsl(${(karaoke.id * 131) % 360}, 80%, 80%)`}>
+            {karaoke.id}
           </Text>
         </Stack>
       </Flex>

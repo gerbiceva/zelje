@@ -1,71 +1,94 @@
 import {
   ActionIcon,
   Alert,
+  Divider,
   LoadingOverlay,
   Stack,
   Table,
   Title,
 } from "@mantine/core";
-import { IconAlertCircle, IconTrashX } from "@tabler/icons-react";
-import { supabaseClient } from "../../supabase/supabase";
-import { useLiveSongList } from "../../components/hooks.ts/songListHook";
-import { score } from "../../components/heuristic";
-import useTimeInSeconds from "../../components/hooks.ts/useTimer";
+import { IconAlertCircle, IconEyeCancel } from "@tabler/icons-react";
 import { useMemo } from "react";
+import { useLiveKaraokeList } from "../../components/hooks.ts/karaokeListHook";
+import { supabaseClient } from "../../supabase/supabase";
 
 export function ZeljeodFolk() {
-  const { err, isLoading, zelje, removeZelje } = useLiveSongList();
+  const { err, isLoading, karaoke, updateKaraoke } = useLiveKaraokeList();
 
-  const deleteZelja = (id: number) => {
-    console.log(id);
+  const hideKaraoko = (id: number) => {
     supabaseClient
-      .from("zelje")
-      .delete()
+      .from("karaoke")
+      .update({hidden: true})
       .eq("id", id)
       .then(() => {
-        removeZelje(id);
-      });
+        updateKaraoke();
+      })
   };
 
-  const timeSec = useTimeInSeconds();
-  const sortedZelje = useMemo(() => {
-    return zelje.sort(
-      (a, b) =>
-        score(b.updated_at, b.clicks, timeSec) -
-        score(a.updated_at, a.clicks, timeSec)
-    );
-  }, [zelje, timeSec]);
+  const sortedKaraoke = useMemo(() => {
+    return karaoke.filter((kar) => {
+      return !kar.hidden;
+    }).sort((a, b) => {
+      return a.id - b.id;
+    });
+  }, [karaoke]);
 
-  const zeelje = sortedZelje.map((zelja) => (
-    <Table.Tr key={zelja.id}>
+  const sortedKaraokeOdpete = useMemo(() => {
+    return karaoke.filter((kar) => {
+      return kar.hidden;
+    }).sort((a, b) => {
+      return a.id - b.id;
+    });
+  }, [karaoke]);
+
+  const karaokeee = sortedKaraoke.map((kar) => (
+    <Table.Tr key={kar.id}>
+      <Table.Td>{kar.id}</Table.Td>
+      <Table.Td>{kar.imepriimek}</Table.Td>
       <Table.Td>
-        {zelja.zelja?.includes("http") ? (
+        {kar.komad?.includes("http") ? (
           <>
-            <a href={zelja.zelja.split(" ")[0]} target="_blank">
-              {zelja.zelja.split(" ")[0]}
+            <a href={kar.komad.split(" ")[0]} target="_blank">
+              {kar.komad.split(" ")[0]}
             </a>{" "}
-            {zelja.zelja.split(" ").slice(1).join(" ")}
+            {kar.komad.split(" ").slice(1).join(" ")}
           </>
         ) : (
-          <>{zelja.zelja}</>
+          <>{kar.komad}</>
         )}
       </Table.Td>
-      <Table.Td>{zelja.clicks}</Table.Td>
+      <Table.Td>{new Date(kar.created_at).toLocaleString()}</Table.Td>
       <Table.Td>
-        {Math.round(score(zelja.updated_at, zelja.clicks, timeSec) * 100) / 100}
-      </Table.Td>
-      <Table.Td>{new Date(zelja.updated_at).toLocaleTimeString()}</Table.Td>
-      <Table.Td>
-        <ActionIcon variant="subtle" onClick={() => deleteZelja(zelja.id)}>
-          <IconTrashX />
+        <ActionIcon variant="subtle" onClick={() => hideKaraoko(kar.id)}>
+          <IconEyeCancel />
         </ActionIcon>
       </Table.Td>
     </Table.Tr>
   ));
 
+  const karaokeeeOdpete = sortedKaraokeOdpete.map((kar) => (
+    <Table.Tr key={kar.id}>
+      <Table.Td>{kar.id}</Table.Td>
+      <Table.Td>{kar.imepriimek}</Table.Td>
+      <Table.Td>
+        {kar.komad?.includes("http") ? (
+          <>
+            <a href={kar.komad.split(" ")[0]} target="_blank">
+              {kar.komad.split(" ")[0]}
+            </a>{" "}
+            {kar.komad.split(" ").slice(1).join(" ")}
+          </>
+        ) : (
+          <>{kar.komad}</>
+        )}
+      </Table.Td>
+      <Table.Td>{new Date(kar.created_at).toLocaleString()}</Table.Td>
+    </Table.Tr>
+  ));
+
   return (
     <Stack p="lg" pos="relative">
-      <Title>Pa valda nebomo to poslusali?</Title>
+      <Title>Pa valda nebomo to peli?</Title>
       {err != undefined ? (
         <Alert color="red" icon={<IconAlertCircle></IconAlertCircle>}>
           {err.message}
@@ -74,17 +97,37 @@ export function ZeljeodFolk() {
         <Table>
           <Table.Thead>
             <Table.Tr>
+              <Table.Th>Zap. št.</Table.Th>
+              <Table.Th>Ime priimek</Table.Th>
               <Table.Th>Komad</Table.Th>
-              <Table.Th>Count</Table.Th>
-              <Table.Th>Score</Table.Th>
-              <Table.Th>Updated</Table.Th>
-              <Table.Th>Zbriz</Table.Th>
+              <Table.Th>Čas prijave</Table.Th>
+              <Table.Th>Skrij</Table.Th>
             </Table.Tr>
           </Table.Thead>
-          <Table.Tbody>{zeelje}</Table.Tbody>
+          <Table.Tbody>{karaokeee}</Table.Tbody>
         </Table>
       )}
       <LoadingOverlay visible={isLoading} />
+
+      <Title mt={50}>Tole smo pa že odpeli...</Title>
+
+      {err != undefined ? (
+        <Alert color="red" icon={<IconAlertCircle></IconAlertCircle>}>
+          {err.message}
+        </Alert>
+      ) : (
+        <Table>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Zap. št.</Table.Th>
+              <Table.Th>Ime priimek</Table.Th>
+              <Table.Th>Komad</Table.Th>
+              <Table.Th>Čas prijave</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{karaokeeeOdpete}</Table.Tbody>
+        </Table>
+      )}
     </Stack>
   );
 }

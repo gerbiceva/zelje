@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import { FolkZelje } from "./views/DodajanjeZelje";
+import { FolkKaraoke } from "./views/DodajanjeKaraoke";
 import { ZeljeodFolk } from "./views/AdminZelje";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <FolkZelje></FolkZelje>,
+    element: <FolkKaraoke></FolkKaraoke>,
   },
   // {
   //   path: "/auth",
@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
   // },
   {
     path: "/zelje",
-    element: <FolkZelje></FolkZelje>,
+    element: <FolkKaraoke></FolkKaraoke>,
   },
   {
     path: "/malejkajtafolkhocecut",
