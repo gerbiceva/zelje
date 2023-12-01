@@ -43,7 +43,7 @@ export function ZeljeodFolk() {
 
   const karaokeee = sortedKaraoke.map((kar) => (
     <Table.Tr key={kar.id}>
-      <Table.Td>{kar.id}</Table.Td>
+      <Table.Td>{kar.id}.</Table.Td>
       <Table.Td>{kar.imepriimek}</Table.Td>
       <Table.Td>
         {kar.komad?.includes("http") ? (
@@ -68,7 +68,7 @@ export function ZeljeodFolk() {
 
   const karaokeeeOdpete = sortedKaraokeOdpete.map((kar) => (
     <Table.Tr key={kar.id}>
-      <Table.Td>{kar.id}</Table.Td>
+      <Table.Td>{kar.id}.</Table.Td>
       <Table.Td>{kar.imepriimek}</Table.Td>
       <Table.Td>
         {kar.komad?.includes("http") ? (

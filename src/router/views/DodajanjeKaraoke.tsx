@@ -101,12 +101,12 @@ export function FolkKaraoke() {
             > 
               <TextInput 
                 placeholder="ime priimek"
-                label="ime priimek"
+                label="Ime priimek"
                 {...form.getInputProps("imepriimek")}
               />
               <TextInput 
                 placeholder="{ mogoce url } naslov komada"
-                label="naslov komada"
+                label="Naslov komada"
                 {...form.getInputProps("komad")}
               />
 

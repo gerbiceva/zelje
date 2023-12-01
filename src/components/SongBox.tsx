@@ -12,12 +12,12 @@ export const SongBox = ({ karaoke }: { karaoke: Tables<"karaoke"> }) => {
       p="md"
       style={{
         borderWidth: "2px",
-        borderColor: `hsl(${(karaoke.id * 131) % 360}, 80%, 80%)`,
+        borderColor: `hsl(${(karaoke.id * 131) % 360}, 80%, 70%)`,
       }}
     >
       <Flex align="center">
         <Flex w="100%" direction="column" justify="space-between">
-          <Text lineClamp={3}>
+          <Text lineClamp={3} fw={600}>
             {karaoke.komad?.includes("http") ? (
               <>
                 {karaoke.imepriimek} - 
@@ -30,14 +30,13 @@ export const SongBox = ({ karaoke }: { karaoke: Tables<"karaoke"> }) => {
               <>{karaoke.imepriimek} - {karaoke.komad}</>
             )}
           </Text>
-          <Text size="xs" c="dimmed" py="sm">
+          <Text size="xs" c="dimmed" pt="sm">
             {new Date(karaoke.created_at).toLocaleString()}
           </Text>
         </Flex>
         <Stack align="center">
-          {/* TODO: pofixaj barvo */}
-          <Text size="xl" fw="bolder" variant="gradient" px="xl" c={`hsl(${(karaoke.id * 131) % 360}, 80%, 80%)`}>
-            {karaoke.id}
+          <Text size="xl" fw="bolder" variant="text" px="xl" c={`hsl(${(karaoke.id * 131) % 360}, 80%, 70%)`}>
+            {karaoke.id}.
           </Text>
         </Stack>
       </Flex>
