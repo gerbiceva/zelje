@@ -2,7 +2,7 @@ import { Flex, Paper, Stack, Text } from "@mantine/core";
 import { Tables } from "../supabase/supabase";
 import "./shake.css";
 
-export const SongBox = ({ karaoke }: { karaoke: Tables<"karaoke"> }) => {
+export const SongBox = ({ karaoke, i }: { karaoke: Tables<"karaoke">, i:number}) => {
 
   return (
     <Paper
@@ -36,7 +36,7 @@ export const SongBox = ({ karaoke }: { karaoke: Tables<"karaoke"> }) => {
         </Flex>
         <Stack align="center">
           <Text size="xl" fw="bolder" variant="text" px="xl" c={`hsl(${(karaoke.id * 131) % 360}, 80%, 70%)`}>
-            {karaoke.id}.
+            {i}.
           </Text>
         </Stack>
       </Flex>
