@@ -12,6 +12,17 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/spotlight/styles.css";
 import { CustomSpotlight } from "./mantine/spotlight.tsx";
+// import FingerprintJS from '@fingerprintjs/fingerprintjs';
+
+//   const fp = await FingerprintJS.load().then((data)=>{
+//     data.get().then((zaresData)=>{
+//       console.log(zaresData.visitorId, zaresData.confidence);
+      
+//     })
+    
+//   })
+
+  
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

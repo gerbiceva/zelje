@@ -136,8 +136,8 @@ export function FolkKaraoke() {
       <SimpleGrid cols={1} py="xl" pos="relative">
         <LoadingOverlay visible={isLoading} />
 
-        {sortedKaraoke.map((kar) => {
-          return <SongBox karaoke={kar} key={kar.id}/>
+        {sortedKaraoke.map((kar, i) => {
+          return <SongBox karaoke={kar} i={i+1} key={kar.id}/>
         })}
       </SimpleGrid>
 
@@ -146,8 +146,9 @@ export function FolkKaraoke() {
       <SimpleGrid cols={1} py="xl" pos="relative">
         <LoadingOverlay visible={isLoading} />
 
-        {sortedKaraokeOdpete.map((kar) => {
-          return <SongBox karaoke={kar} key={kar.id}/>
+        {
+        sortedKaraokeOdpete.map((kar, i) => {
+          return <SongBox karaoke={kar} i={i+1} key={kar.id}/>
         })}
       </SimpleGrid>
     </Container>
