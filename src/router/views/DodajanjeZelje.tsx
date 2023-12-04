@@ -85,7 +85,7 @@ export function FolkZelje() {
           <Group>
             <IconBrandSpotify color="#1DB954"></IconBrandSpotify>
             <Title order={6} c="green">
-              DJu je ful doro če bi lahko poslali spotify link. tnx
+              DJu je ful doro če bi lahko poslali neki ki na spotify bla konc uredu
             </Title>
           </Group>
           <Group justify="center" w="100%">
