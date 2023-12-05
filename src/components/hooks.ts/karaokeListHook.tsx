@@ -34,7 +34,11 @@ export const useLiveKaraokeList = () => {
           // find old index
           for (let i = 0; i < karaokeBuffer.length; i++) {
             if (karaokeBuffer[i].id == payload.old.id) {
-              karaokeBuffer[i].hidden = payload.new.hidden;
+              if (payload.new.hidden) {
+                karaokeBuffer[i].hidden = payload.new.hidden;
+              } else if (payload.new.likes) {
+                karaokeBuffer[i].likes = payload.new.likes;
+              }
             }
           }
           setKaraoke([...karaokeBuffer]);
