@@ -7,7 +7,7 @@ import {
   Table,
   Title,
 } from "@mantine/core";
-import { IconAlertCircle, IconEyeCancel } from "@tabler/icons-react";
+import { IconAlertCircle, IconEyeCancel, IconTrash } from "@tabler/icons-react";
 import { useMemo } from "react";
 import { useLiveKaraokeList } from "../../components/hooks.ts/karaokeListHook";
 import { supabaseClient } from "../../supabase/supabase";
@@ -19,6 +19,16 @@ export function ZeljeodFolk() {
     supabaseClient
       .from("karaoke")
       .update({hidden: true})
+      .eq("id", id)
+      .then(() => {
+        updateKaraoke();
+      })
+  };
+
+  const deleteKaraoko = (id: number) => {
+    supabaseClient
+      .from("karaoke")
+      .delete()
       .eq("id", id)
       .then(() => {
         updateKaraoke();
@@ -63,6 +73,11 @@ export function ZeljeodFolk() {
           <IconEyeCancel />
         </ActionIcon>
       </Table.Td>
+      <Table.Td>
+        <ActionIcon variant="subtle" onClick={() => deleteKaraoko(kar.id)}>
+          <IconTrash />
+        </ActionIcon>
+      </Table.Td>
     </Table.Tr>
   ));
 
@@ -83,6 +98,11 @@ export function ZeljeodFolk() {
         )}
       </Table.Td>
       <Table.Td>{new Date(kar.created_at).toLocaleString()}</Table.Td>
+      <Table.Td>
+        <ActionIcon variant="subtle" onClick={() => deleteKaraoko(kar.id)}>
+          <IconTrash />
+        </ActionIcon>
+      </Table.Td>
     </Table.Tr>
   ));
 
@@ -101,7 +121,8 @@ export function ZeljeodFolk() {
               <Table.Th>Ime priimek</Table.Th>
               <Table.Th>Komad</Table.Th>
               <Table.Th>Čas prijave</Table.Th>
-              <Table.Th>Skrij</Table.Th>
+              <Table.Th>Odpeto</Table.Th>
+              <Table.Th>Zbriši</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{karaokeee}</Table.Tbody>
@@ -123,6 +144,7 @@ export function ZeljeodFolk() {
               <Table.Th>Ime priimek</Table.Th>
               <Table.Th>Komad</Table.Th>
               <Table.Th>Čas prijave</Table.Th>
+              <Table.Th>Zbriši</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{karaokeeeOdpete}</Table.Tbody>
