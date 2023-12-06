@@ -4,8 +4,12 @@ import useShakeAnimation from "./hooks.ts/useShake";
 import "./novcssfile.css";
 import "./shake.css";
 import "./wiggle.css";
+import "./gay.css"
 
 import useWiggleAnimation from "./hooks.ts/useWiggle";
+const emojiThreshold = 10;
+const rainbowThreshold = 30;
+const wiggleThreshold = 50;
 
 export const SongBox = ({
   karaoke,
@@ -21,7 +25,7 @@ export const SongBox = ({
       className="prevent-select"
       style={{
         ...shakeStyle,
-        ...wiggleStyle,
+        ... (karaoke.likes > wiggleThreshold) ? wiggleStyle : {},
       }}
     >
       <Box
@@ -31,13 +35,16 @@ export const SongBox = ({
           zIndex: 100,
         }}
       >
-        <Text size="2rem">🎉</Text>
+        {karaoke.likes > emojiThreshold && (
+          <Text size="2rem">🎉</Text>
+        )}
       </Box>
       <Paper
         withBorder
         shadow="lg"
         radius="md"
         p="md"
+        className={(karaoke.likes > rainbowThreshold) ? 'rainbow-gradient': ''}
         style={{
           borderWidth: "2px",
           borderColor: `hsl(${(karaoke.id * 131) % 360}, 80%, 70%)`,
