@@ -10,6 +10,8 @@ import {
   Stack,
   TextInput,
   Title,
+  Text,
+  ActionIcon,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -17,6 +19,7 @@ import {
   Icon3dCubeSphere,
   IconAlertCircle,
   IconMicrophone2,
+  IconMusic,
 } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import { SongBox } from "../../components/SongBox";
@@ -82,7 +85,12 @@ export function FolkKaraoke() {
     <Container size="sm">
       <Center>
         <Stack p="lg" pos="relative" w="100%">
-          <Title> Gerba žmurka</Title>
+          <Title> Gerba žmurka </Title>
+          <Text ta="right">
+          <ActionIcon variant="subtle" component="a" href="https://karaoke.zaanimivo.xyz">
+            <IconMusic />
+          </ActionIcon>
+          </Text>
           <Title order={4} c="dimmed">
             Kaj hočeš zapet, prijavi se 🎤
           </Title>

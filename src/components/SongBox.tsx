@@ -7,9 +7,9 @@ import "./wiggle.css";
 import "./gay.css"
 
 import useWiggleAnimation from "./hooks.ts/useWiggle";
-const emojiThreshold = 10;
-const rainbowThreshold = 30;
-const wiggleThreshold = 50;
+const emojiThreshold = 50;
+const rainbowThreshold = 150;
+const wiggleThreshold = 300;
 
 export const SongBox = ({
   karaoke,
